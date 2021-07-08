@@ -485,10 +485,8 @@ public class GroundItemsPlugin extends Plugin
 			GroundItem groundItem = collectedGroundItems.get(groundItemKey);
 			int quantity = groundItem.getQuantity();
 
-			final int gePrice = groundItem.getGePrice();
-			final int haPrice = groundItem.getHaPrice();
-			final Color hidden = getHidden(new NamedQuantity(groundItem.getName(), quantity), gePrice, haPrice, groundItem.isTradeable());
-			final Color highlighted = getHighlighted(new NamedQuantity(groundItem.getName(), quantity), gePrice, haPrice);
+			final Color hidden = getHidden(groundItem);
+			final Color highlighted = getHighlighted(groundItem);
 			final Color color = getItemColor(highlighted, hidden);
 			final boolean canBeRecolored = highlighted != null || (hidden != null && config.recolorMenuHiddenItems());
 
@@ -556,8 +554,12 @@ public class GroundItemsPlugin extends Plugin
 		config.setHighlightedItem(Text.toCSV(highlightedItemSet));
 	}
 
-	Color getHighlighted(NamedQuantity item, int gePrice, int haPrice)
+	Color getHighlighted(GroundItem groundItem)
 	{
+		NamedQuantity item = new NamedQuantity(groundItem);
+		int gePrice = groundItem.getGePrice();
+		int haPrice = groundItem.getHaPrice();
+
 		if (TRUE.equals(highlightedItems.getUnchecked(item)))
 		{
 			return config.highlightedColor();
@@ -578,11 +580,21 @@ public class GroundItemsPlugin extends Plugin
 			}
 		}
 
+		if (config.highlightStackable() && groundItem.isStackable())
+		{
+
+		}
+
 		return null;
 	}
 
-	Color getHidden(NamedQuantity item, int gePrice, int haPrice, boolean isTradeable)
+	Color getHidden(GroundItem groundItem)
 	{
+		NamedQuantity item = new NamedQuantity(groundItem);
+		int gePrice = groundItem.getGePrice();
+		int haPrice = groundItem.getHaPrice();
+		boolean isTradeable = groundItem.isTradeable();
+
 		final boolean isExplicitHidden = TRUE.equals(hiddenItems.getUnchecked(item));
 		final boolean isExplicitHighlight = TRUE.equals(highlightedItems.getUnchecked(item));
 		final boolean canBeHidden = gePrice > 0 || isTradeable || !config.dontHideUntradeables();
