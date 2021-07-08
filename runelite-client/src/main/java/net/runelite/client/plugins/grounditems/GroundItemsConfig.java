@@ -403,4 +403,15 @@ public interface GroundItemsConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+			keyName = "highlightStackable",
+			name = "Highlight stackable in inventory",
+			description = "Highlight stackable ground items already in inventory",
+			position = 30
+	)
+	default boolean highlightStackable()
+	{
+		return false;
+	}
 }
