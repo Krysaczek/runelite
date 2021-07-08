@@ -35,16 +35,11 @@ import java.awt.Rectangle;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -581,12 +576,12 @@ public class GroundItemsPlugin extends Plugin
 		}
 
 		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
-		final Item[] inventoryItems = inventory.getItems();
+		final Integer[] inventoryItemIds = Arrays.stream(inventory.getItems()).map(x -> x.getId()).toArray(Integer[]::new);
 		if (config.highlightStackable() && groundItem.isStackable())
 		{
-			for (Item inventoryItem : inventoryItems)
+			for (int inventoryItemId : inventoryItemIds)
 			{
-				if (groundItem.getItemId() == inventoryItem.getId())
+				if (groundItem.getItemId() == inventoryItemId)
 				{
 					return config.highlightedColor();
 				}
