@@ -576,16 +576,9 @@ public class GroundItemsPlugin extends Plugin
 		}
 
 		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
-		final Integer[] inventoryItemIds = Arrays.stream(inventory.getItems()).map(x -> x.getId()).toArray(Integer[]::new);
-		if (config.highlightStackable() && groundItem.isStackable())
+		if (config.highlightStackable() && groundItem.isStackable() && inventory.contains(groundItem.getItemId()))
 		{
-			for (int inventoryItemId : inventoryItemIds)
-			{
-				if (groundItem.getItemId() == inventoryItemId)
-				{
-					return config.highlightedColor();
-				}
-			}
+			return config.highlightedColor();
 		}
 
 		return null;
