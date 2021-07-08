@@ -61,6 +61,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Tile;
 import net.runelite.api.TileItem;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.FocusChanged;
@@ -122,6 +123,11 @@ public class GroundItemsPlugin extends Plugin
 	private static final int CAST_ON_ITEM = MenuAction.SPELL_CAST_ON_GROUND_ITEM.getId();
 
 	private static final String TELEGRAB_TEXT = ColorUtil.wrapWithColorTag("Telekinetic Grab", Color.GREEN) + ColorUtil.prependColorTag(" -> ", Color.WHITE);
+
+	private static final Varbits[] RUNE_VARBITS =
+	{
+		Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3
+	};
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -485,10 +491,8 @@ public class GroundItemsPlugin extends Plugin
 			GroundItem groundItem = collectedGroundItems.get(groundItemKey);
 			int quantity = groundItem.getQuantity();
 
-			final int gePrice = groundItem.getGePrice();
-			final int haPrice = groundItem.getHaPrice();
-			final Color hidden = getHidden(new NamedQuantity(groundItem.getName(), quantity), gePrice, haPrice, groundItem.isTradeable());
-			final Color highlighted = getHighlighted(new NamedQuantity(groundItem.getName(), quantity), gePrice, haPrice);
+			final Color hidden = getHidden(groundItem);
+			final Color highlighted = getHighlighted(groundItem);
 			final Color color = getItemColor(highlighted, hidden);
 			final boolean canBeRecolored = highlighted != null || (hidden != null && config.recolorMenuHiddenItems());
 
@@ -556,8 +560,12 @@ public class GroundItemsPlugin extends Plugin
 		config.setHighlightedItem(Text.toCSV(highlightedItemSet));
 	}
 
-	Color getHighlighted(NamedQuantity item, int gePrice, int haPrice)
+	Color getHighlighted(GroundItem groundItem)
 	{
+		NamedQuantity item = new NamedQuantity(groundItem);
+		int gePrice = groundItem.getGePrice();
+		int haPrice = groundItem.getHaPrice();
+
 		if (TRUE.equals(highlightedItems.getUnchecked(item)))
 		{
 			return config.highlightedColor();
@@ -578,11 +586,22 @@ public class GroundItemsPlugin extends Plugin
 			}
 		}
 
+		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+		if (config.highlightStackable() && groundItem.isStackable() && inventory.contains(groundItem.getItemId()))
+		{
+			return config.highlightStackableColor();
+		}
+
 		return null;
 	}
 
-	Color getHidden(NamedQuantity item, int gePrice, int haPrice, boolean isTradeable)
+	Color getHidden(GroundItem groundItem)
 	{
+		NamedQuantity item = new NamedQuantity(groundItem);
+		int gePrice = groundItem.getGePrice();
+		int haPrice = groundItem.getHaPrice();
+		boolean isTradeable = groundItem.isTradeable();
+
 		final boolean isExplicitHidden = TRUE.equals(hiddenItems.getUnchecked(item));
 		final boolean isExplicitHighlight = TRUE.equals(highlightedItems.getUnchecked(item));
 		final boolean canBeHidden = gePrice > 0 || isTradeable || !config.dontHideUntradeables();
