@@ -414,4 +414,16 @@ public interface GroundItemsConfig extends Config
 	{
 		return false;
 	}
+
+	@Alpha
+	@ConfigItem(
+			keyName = "highlightStackableColor",
+			name = "Highlight stackable color",
+			description = "Configures the color for highlighted stackable items",
+			position = 31
+	)
+	default Color highlightStackableColor()
+	{
+		return Color.YELLOW;
+	}
 }

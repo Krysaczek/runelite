@@ -578,7 +578,7 @@ public class GroundItemsPlugin extends Plugin
 		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 		if (config.highlightStackable() && groundItem.isStackable() && inventory.contains(groundItem.getItemId()))
 		{
-			return config.highlightedColor();
+			return config.highlightStackableColor();
 		}
 
 		return null;
