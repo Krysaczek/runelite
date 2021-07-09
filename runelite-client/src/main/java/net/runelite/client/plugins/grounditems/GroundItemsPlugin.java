@@ -61,6 +61,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Tile;
 import net.runelite.api.TileItem;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.FocusChanged;
@@ -122,6 +123,11 @@ public class GroundItemsPlugin extends Plugin
 	private static final int CAST_ON_ITEM = MenuAction.SPELL_CAST_ON_GROUND_ITEM.getId();
 
 	private static final String TELEGRAB_TEXT = ColorUtil.wrapWithColorTag("Telekinetic Grab", Color.GREEN) + ColorUtil.prependColorTag(" -> ", Color.WHITE);
+
+	private static final Varbits[] RUNE_VARBITS =
+	{
+		Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3
+	};
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -583,12 +589,12 @@ public class GroundItemsPlugin extends Plugin
 		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 		if (config.highlightStackable() && groundItem.isStackable() && inventory.contains(groundItem.getItemId()))
 		{
-			return config.highlightStackableColor();
+			return config.highlightStackableStorableColor();
 		}
 
 		if (config.highlightStorable() && CanBeStored(inventory, groundItem))
 		{
-			return config.highlightStackableColor();
+			return config.highlightStackableStorableColor();
 		}
 
 		return null;
@@ -600,8 +606,7 @@ public class GroundItemsPlugin extends Plugin
 		final boolean coalBag = inventory.contains(ItemID.OPEN_COAL_BAG);
 		final boolean gemBag = inventory.contains(ItemID.OPEN_GEM_BAG);
 		final boolean plankSack = inventory.contains(ItemID.PLANK_SACK);
-		// TODO: check if groundItem is valid for this types of storage: rune pouch, seed box. Assume other storages to be empty.
-		//final boolean runePouch = inventory.contains(ItemID.RUNE_POUCH) || inventory.contains(ItemID.RUNE_POUCH_L);
+		final boolean runePouch = inventory.contains(ItemID.RUNE_POUCH) || inventory.contains(ItemID.RUNE_POUCH_L);
 
 		if(herbSack && (ItemID.GRIMY_GUAM_LEAF == groundItem.getItemId()
 				|| ItemID.GRIMY_MARRENTILL == groundItem.getItemId()
@@ -641,6 +646,24 @@ public class GroundItemsPlugin extends Plugin
 				||ItemID.MAHOGANY_PLANK == groundItem.getItemId()))
 		{
 			return true;
+		}
+
+		if(runePouch)
+		{
+			for (int i = 0; i < RUNE_VARBITS.length; i++)
+			{
+				Varbits runeVarbit = RUNE_VARBITS[i];
+				Runes rune = Runes.getRune(client.getVar(runeVarbit));
+				if(rune == null)
+				{
+					continue;
+				}
+
+				if(rune.getItemId() == groundItem.getItemId())
+				{
+					return true;
+				}
+			}
 		}
 
 		return false;

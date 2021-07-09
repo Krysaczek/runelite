@@ -415,26 +415,26 @@ public interface GroundItemsConfig extends Config
 		return false;
 	}
 
-	@Alpha
-	@ConfigItem(
-			keyName = "highlightStackableColor",
-			name = "Highlight stackable color",
-			description = "Configures the color for highlighted stackable items",
-			position = 31
-	)
-	default Color highlightStackableColor()
-	{
-		return Color.YELLOW;
-	}
-
 	@ConfigItem(
 			keyName = "highlightStorable",
 			name = "Highlight storable in inventory storage container",
 			description = "Highlight storable ground items for any inventory storage container",
-			position = 32
+			position = 31
 	)
 	default boolean highlightStorable()
 	{
 		return false;
+	}
+
+	@Alpha
+	@ConfigItem(
+			keyName = "highlightStackableStorableColor",
+			name = "Highlight stackable and storable",
+			description = "Configures the color for highlighted stackable and storable items",
+			position = 32
+	)
+	default Color highlightStackableStorableColor()
+	{
+		return Color.YELLOW;
 	}
 }
