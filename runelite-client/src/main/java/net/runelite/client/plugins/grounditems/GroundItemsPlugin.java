@@ -642,8 +642,8 @@ public class GroundItemsPlugin extends Plugin
 
 		if (plankSack && (ItemID.PLANK == groundItem.getItemId()
 				|| ItemID.OAK_PLANK == groundItem.getItemId()
-				||ItemID.TEAK_PLANK == groundItem.getItemId()
-				||ItemID.MAHOGANY_PLANK == groundItem.getItemId()))
+				|| ItemID.TEAK_PLANK == groundItem.getItemId()
+				|| ItemID.MAHOGANY_PLANK == groundItem.getItemId()))
 		{
 			return true;
 		}
