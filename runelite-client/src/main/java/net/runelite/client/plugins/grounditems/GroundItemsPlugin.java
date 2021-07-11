@@ -589,84 +589,10 @@ public class GroundItemsPlugin extends Plugin
 		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 		if (config.highlightStackable() && groundItem.isStackable() && inventory.contains(groundItem.getItemId()))
 		{
-			return config.highlightStackableStorableColor();
-		}
-
-		if (config.highlightStorable() && CanBeStored(inventory, groundItem))
-		{
-			return config.highlightStackableStorableColor();
+			return config.highlightStackableColor();
 		}
 
 		return null;
-	}
-
-	private boolean CanBeStored(ItemContainer inventory, GroundItem groundItem)
-	{
-		final boolean herbSack = inventory.contains(ItemID.OPEN_HERB_SACK);
-		final boolean coalBag = inventory.contains(ItemID.OPEN_COAL_BAG);
-		final boolean gemBag = inventory.contains(ItemID.OPEN_GEM_BAG);
-		final boolean plankSack = inventory.contains(ItemID.PLANK_SACK);
-		final boolean runePouch = inventory.contains(ItemID.RUNE_POUCH) || inventory.contains(ItemID.RUNE_POUCH_L);
-
-		if(herbSack && (ItemID.GRIMY_GUAM_LEAF == groundItem.getItemId()
-				|| ItemID.GRIMY_MARRENTILL == groundItem.getItemId()
-				|| ItemID.GRIMY_TARROMIN == groundItem.getItemId()
-				|| ItemID.GRIMY_HARRALANDER == groundItem.getItemId()
-				|| ItemID.GRIMY_RANARR_WEED == groundItem.getItemId()
-				|| ItemID.GRIMY_TOADFLAX == groundItem.getItemId()
-				|| ItemID.GRIMY_IRIT_LEAF == groundItem.getItemId()
-				|| ItemID.GRIMY_AVANTOE == groundItem.getItemId()
-				|| ItemID.GRIMY_KWUARM == groundItem.getItemId()
-				|| ItemID.GRIMY_SNAPDRAGON == groundItem.getItemId()
-				|| ItemID.GRIMY_CADANTINE == groundItem.getItemId()
-				|| ItemID.GRIMY_LANTADYME == groundItem.getItemId()
-				|| ItemID.GRIMY_DWARF_WEED == groundItem.getItemId()
-				|| ItemID.GRIMY_TORSTOL == groundItem.getItemId()))
-		{
-			return true;
-		}
-
-		if(coalBag && ItemID.COAL == groundItem.getItemId())
-		{
-			return true;
-		}
-
-		if (gemBag && (ItemID.UNCUT_SAPPHIRE == groundItem.getItemId()
-				|| ItemID.UNCUT_EMERALD == groundItem.getItemId()
-				|| ItemID.UNCUT_RUBY == groundItem.getItemId()
-				|| ItemID.UNCUT_DIAMOND == groundItem.getItemId()
-				|| ItemID.UNCUT_DRAGONSTONE == groundItem.getItemId()))
-		{
-			return true;
-		}
-
-		if (plankSack && (ItemID.PLANK == groundItem.getItemId()
-				|| ItemID.OAK_PLANK == groundItem.getItemId()
-				|| ItemID.TEAK_PLANK == groundItem.getItemId()
-				|| ItemID.MAHOGANY_PLANK == groundItem.getItemId()))
-		{
-			return true;
-		}
-
-		if(runePouch)
-		{
-			for (int i = 0; i < RUNE_VARBITS.length; i++)
-			{
-				Varbits runeVarbit = RUNE_VARBITS[i];
-				Runes rune = Runes.getRune(client.getVar(runeVarbit));
-				if(rune == null)
-				{
-					continue;
-				}
-
-				if(rune.getItemId() == groundItem.getItemId())
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	Color getHidden(GroundItem groundItem)
